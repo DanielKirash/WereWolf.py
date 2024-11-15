@@ -15,18 +15,16 @@ def handle_wolf_turn(wolfs, alive_players, data):
 
 #Seer turn handler
 def handle_seer_turn(seers, alive_players, data):
-    choices = []
     for seer in seers:
         seer.socket.sendall(data.encode())
         seer.socket.sendall('Seer wake up. Choose a player to see:'.encode())
         while True:
             choice = seer.socket.recv(1024).decode()
             if choice in alive_players:
-                choices.append(choice)
-                break
+                return choice
             else:
                 seer.socket.sendall('Invalid choice. Choose a player to see:'.encode())
-    return choices
+
 
 #Medium turn handler
 def handle_medium_turn(mediums, dead_players):
