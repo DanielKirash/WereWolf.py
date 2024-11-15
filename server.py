@@ -3,6 +3,7 @@ import threading
 import random
 from user import user
 import json
+from turn_handlers import handle_wolf_turn, handle_seer_turn, handle_medium_turn, handle_chavalry_turn
 
 # Server configuration
 HOST = 'localhost'
@@ -100,20 +101,26 @@ def broadcast_message(message):
 def game_loop():
     global WOLF_CHOICE, SEER_CHOICE, MEDIUM_CHOICE, CHAV_CHOICE
     while True:
+        
         broadcast_message('The game starts now')
         broadcast_message('The night has come, everyone goes to sleep')
 
+        alive_players = [player.username for player in players if player.alive]
+        dead_players = [player.username for player in players if not player.alive]
+        data = json.dumps(alive_players)
+        dead_data = json.dumps(dead_players)
+
         # Wolfs' turn
-        WOLF_CHOICE = handle_wolf_turn()
+        WOLF_CHOICE = handle_wolf_turn(wolfs, alive_players, data)
 
         # Seer's turn
-        SEER_CHOICE = handle_seer_turn()
+        SEER_CHOICE = handle_seer_turn(seers, alive_players, data)
 
         # Medium's turn
-        MEDIUM_CHOICE = handle_medium_turn()
+        MEDIUM_CHOICE = handle_medium_turn(mediums, dead_players, dead_data)
 
         # Chavalry's turn
-        CHAV_CHOICE = handle_chavalry_turn()
+        CHAV_CHOICE = handle_chavalry_turn(chavalries, alive_players, data)
 
         # Daytime actions
         broadcast_message('The day has come')
@@ -134,61 +141,17 @@ def game_loop():
                 seer.socket.sendall(f'The player {SEER_CHOICE} is a wolf'.encode())
             else:
                 seer.socket.sendall(f'The player {SEER_CHOICE} is not a wolf'.encode())
+        
+        # Medium's information
+        for medium in mediums:
+            if MEDIUM_CHOICE in [wolf.username for wolf in wolfs]:
+                medium.socket.sendall(f'The player {MEDIUM_CHOICE} was a wolf'.encode())
+            else:
+                medium.socket.sendall(f'The player {MEDIUM_CHOICE} was not a wolf'.encode())
             
-alive_players = [player.username for player in players if player.alive]
-dead_players = [player.username for player in players if not player.alive]
-data = json.dumps(alive_players)
-# Function to handle wolf's turn
-def handle_wolf_turn():
-    choices = []
-    for wolf in wolfs:
-        wolf.socket.send(data.encode())
-        wolf.socket.send('Wolfs wake up. Choose a player to kill:'.encode())
-        while True:
-            choice = wolf.socket.recv(1024).decode()
-            if choice in alive_players:
-                choices.append(choice)
-                break
-            else:
-                wolf.socket.sendall('Invalid choice. Choose a player to kill:'.encode())
-    return choices
 
-# Function to handle seer's turn
-def handle_seer_turn():
-    choices = []
-    for seer in seers:
-        seer.socket.sendall(data.encode())
-        seer.socket.sendall('Seer wake up. Choose a player to see:'.encode())
-        while True:
-            choice = seer.socket.recv(1024).decode()
-            if choice in alive_players:
-                choices.append(choice)
-                break
-            else:
-                seer.socket.sendall('Invalid choice. Choose a player to see:'.encode())
-    return choices
-       
+            
 
-# Function to handle medium's turn
-def handle_medium_turn():
-    choice = None
-    for medium in mediums:
-        medium.socket.sendall('Medium wake up. Choose a player to see:'.encode())
-        while True:
-            choice = medium.socket.recv(1024).decode()
-            if choice in dead_players:
-                return choice
-            else:
-                medium.socket.sendall('Invalid choice. Choose a player to see:'.encode())
-       
-
-# Function to handle chavalry's turn
-def handle_chavalry_turn():
-    choice = []
-    for chavalry in chavalries:
-        chavalry.socket.sendall('Chavalry wake up. Choose a player to protect:'.encode())
-        choice = chavalry.socket.recv(1024).decode()
-        return choice
 
 # Start the server
 start_server()
