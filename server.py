@@ -80,7 +80,7 @@ def handle_client(client_socket):
         client_socket.sendall(f'Your role is {rnd_role}'.encode())
 
         # Start the game if enough players have joined
-        if len(players) == 2:
+        if len(players) == 10:
             broadcast_message('The game is starting...')
             game_loop()
 
@@ -126,14 +126,22 @@ def game_loop():
         broadcast_message('The day has come')
 
         # Resolve actions
+        WOLF_CHOICE = random.choice(WOLF_CHOICE)
         if WOLF_CHOICE == CHAV_CHOICE:
             broadcast_message('The chavalry saved the player!')
         else:
-            random_wolf_choice = random.choice(WOLF_CHOICE)
-            broadcast_message(f'The player {random_wolf_choice} has died')
+            broadcast_message(f'The player {WOLF_CHOICE} has died')
             for player in players:
                 if player.username == WOLF_CHOICE:
                     player.alive = False
+                    if player.role == 'seers':
+                        seers.remove(player)
+                    elif player.role == 'medium':
+                        mediums.remove(player)
+                    elif player.role == 'chavalry':
+                        chavalries.remove(player)
+                    elif player.role == 'villager':
+                        villagers.remove(player)
 
         # Seer's information
         for seer in seers:
@@ -148,8 +156,47 @@ def game_loop():
                 medium.socket.sendall(f'The player {MEDIUM_CHOICE} was a wolf'.encode())
             else:
                 medium.socket.sendall(f'The player {MEDIUM_CHOICE} was not a wolf'.encode())
-            
 
+        # Check if the game has ended
+        if len(wolfs) == 0:
+            broadcast_message('The villagers win!')
+            break
+        elif len(wolfs) >= len(villagers)+len(seers)+len(mediums)+len(chavalries):
+            broadcast_message('The wolfs win!')
+            break
+
+        # Voting phase
+        broadcast_message('Voting phase')
+        votes = {}
+        for player in players:
+            if player.alive:
+                player.socket.sendall('Choose a player to vote:'.encode())
+                vote = player.socket.recv(1024).decode()
+                while True:
+                    if vote in alive_players:
+                        if vote in votes:
+                            votes[vote] += 1
+                            break
+                        else:
+                            votes[vote] = 1
+                            break
+                    else:
+                        player.socket.sendall('Invalid vote'.encode())
+        
+        # Resolve the votes
+        max_votes = max(votes.values()) 
+        for player in players:
+            if votes[player.username] == max_votes:
+                player.alive = False
+                if player.role == 'seer':
+                    seers.remove(player)
+                elif player.role == 'medium':
+                    mediums.remove(player)
+                elif player.role == 'chavalry':
+                    chavalries.remove(player)
+                elif player.role == 'villager':
+                    villagers.remove(player)
+                broadcast_message(f'The player {player.username} has been lynched')
             
 
 
