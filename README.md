@@ -1,16 +1,14 @@
-# <strong>🐺 Werewolf Game Server & Client</strong><br><br>
-Un'applicazione di gioco multiplayer basata sul classico <strong>"Lupi Mannari di Thiercelieux"</strong>, implementata in Python. Il progetto utilizza socket per la comunicazione client-server e supporta diversi ruoli per i giocatori.
+
+<strong>🐺 Werewolf Game Server & Client</strong><br><br>
+A multiplayer game application based on the classic <strong>"Werewolf: The Party Game."</strong>, implemented in Python. The project uses socket communication for a client-server setup and supports various player roles.
 
 <br>
-👥 Ruoli disponibili
-<ul> <li><strong>Lupo Mannaro (`wolf`)</strong>: Può scegliere di eliminare un giocatore durante la notte.</li> <li><strong>Veggente (`seer`)</strong>: Può scoprire il ruolo di un altro giocatore.</li> <li><strong>Medium (`medium`)</strong>: Può sapere il ruolo di un giocatore morto.</li> <li><strong>Cavaliere (`chavalry`)</strong>: Può salvare un giocatore dall'attacco dei lupi.</li> <li><strong>Villager (`villager`)</strong>: Contribuisce alla votazione diurna per eliminare i sospetti.</li> </ul> <br>
-🛠 Tecnologie utilizzate
-<ul> <li><strong>Python</strong>: Linguaggio di programmazione principale.</li> <li><strong>Socket</strong>: Utilizzato per la comunicazione client-server.</li> <li><strong>Threading</strong>: Per gestire connessioni multiple e azioni simultanee.</li> <li><strong>JSON</strong>: Per il trasferimento di dati tra client e server.</li> </ul> <br>
-🚀 Caratteristiche
-<ul> <li>Gioco multiplayer con supporto per 10 giocatori.</li> <li>Assegnazione casuale dei ruoli ai giocatori.</li> <li>Fasi di gioco automatizzate: <strong>notte</strong> (azioni dei ruoli) e <strong>giorno</strong> (discussione e votazione).</li> <li>Risoluzione delle azioni dei ruoli e gestione degli eventi di gioco.</li> <li>Verifica automatica delle condizioni di vittoria (villagers vs wolves).</li> </ul> <br>
+👥 Available Roles
 
-<br>
-🤝 Contribuire <br>
-Contributi, issue e richieste di pull sono benvenuti! Sentiti libero di migliorare il progetto e di proporre nuove funzionalità.<br>
+<ul> <li><strong>Werewolf (`wolf`)</strong>: Can choose to eliminate a player during the night.</li> <li><strong>Seer (`seer`)</strong>: Can discover the role of another player.</li> <li><strong>Medium (`medium`)</strong>: Can learn the role of a dead player.</li> <li><strong>Chavalry (`chavalry`)</strong>: Can save a player from a werewolf attack.</li> <li><strong>Villager (`villager`)</strong>: Participates in the daytime vote to eliminate suspects.</li> </ul> <br>
+🛠 Technologies Used
 
-<p align="center"> Made with ❤️ by <a href="https://github.com/DanielKirash">DanielKirash</a> </p>
+<ul> <li><strong>Python</strong>: Main programming language.</li> <li><strong>Socket</strong>: Used for client-server communication.</li> <li><strong>Threading</strong>: To manage multiple connections and concurrent actions.</li> <li><strong>JSON</strong>: For data transfer between client and server.</li> </ul> <br>
+🚀 Features
+
+<ul> <li>Multiplayer game supporting up to 10 players.</li> <li>Random role assignment for players.</li> <li>Automated game phases: <strong>night</strong> (role actions) and <strong>day</strong> (discussion and voting).</li> <li>Action resolution and event handling based on player roles.</li> <li>Automatic victory condition check (villagers vs. wolves).</li> </ul> <br> <br> 🤝 Contributing <br> Contributions, issues, and pull requests are welcome! Feel free to enhance the project and suggest new features.<br> <p align="center"> Made with ❤️ by <a href="https://github.com/DanielKirash">DanielKirash</a> </p>
