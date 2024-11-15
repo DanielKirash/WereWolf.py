@@ -1,5 +1,5 @@
 
-<strong>🐺 Werewolf Game Server & Client</strong><br><br>
+#<strong>🐺 Werewolf Game Server & Client</strong><br><br>
 A multiplayer game application based on the classic <strong>"Werewolf: The Party Game."</strong>, implemented in Python. The project uses socket communication for a client-server setup and supports various player roles.
 
 <br>
